@@ -1,26 +1,800 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamilar Kalagam</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>தமிழர் களகம் | Tamilar Kalagam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black:      #171717;
+      --orange:     #F25623;
+      --orange-dk:  #c8401a;
+      --dgray:      #4D4D4D;
+      --lgray:      #DEDEDE;
+      --white:      #FAFAFA;
+      --card-bg:    #1f1f1f;
+      --border:     rgba(242,86,35,0.18);
+      --nav-h:      64px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--black);
+      color:var(--white);
+      font-family:'DM Sans',sans-serif;
+      overflow-x:hidden;
+      line-height:1.6;
+    }
+    a { text-decoration:none; color:inherit; }
+    button { cursor:pointer; font-family:inherit; }
+
+    /* UTILITY */
+    .container { width:100%; max-width:1160px; margin:0 auto; padding:0 20px; }
+    .section { padding:80px 0; }
+    .section--dark { background:#111; }
+
+    .tag {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:11px; font-weight:700; letter-spacing:3px;
+      text-transform:uppercase; color:var(--orange); margin-bottom:10px;
+    }
+    .tag::before { content:''; width:24px; height:2px; background:var(--orange); flex-shrink:0; }
+
+    .section-title {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(32px,5vw,56px);
+      letter-spacing:3px; line-height:1.05; color:var(--white);
+    }
+    .section-title-ta {
+      font-family:'Tiro Tamil',serif;
+      font-size:clamp(18px,2.5vw,26px);
+      color:var(--lgray); margin-top:4px;
+    }
+    .divider { width:50px; height:3px; background:var(--orange); margin-top:16px; }
+
+    .btn {
+      display:inline-block; padding:13px 28px;
+      font-size:13px; font-weight:600; letter-spacing:1.5px;
+      text-transform:uppercase; border:none; border-radius:3px;
+      transition:all .2s; white-space:nowrap; cursor:pointer;
+    }
+    .btn-primary { background:var(--orange); color:var(--white); }
+    .btn-primary:hover { background:var(--orange-dk); transform:translateY(-2px); }
+    .btn-outline { background:transparent; color:var(--white); border:2px solid rgba(255,255,255,.35); }
+    .btn-outline:hover { border-color:var(--orange); color:var(--orange); }
+    .btn-sm { padding:9px 20px; font-size:12px; }
+
+    /* TOP BAR */
+    .topbar {
+      background:var(--orange); padding:7px 0;
+      font-size:12px; font-weight:600; letter-spacing:1.5px;
+      overflow:hidden; white-space:nowrap;
+    }
+    .topbar-inner {
+      display:inline-flex; gap:48px; align-items:center;
+      animation:marquee 28s linear infinite;
+    }
+    .topbar-inner span { flex-shrink:0; }
+    .dot { color:rgba(255,255,255,.5); }
+    @keyframes marquee {
+      0%   { transform:translateX(0); }
+      100% { transform:translateX(-50%); }
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position:sticky; top:0; z-index:200;
+      background:rgba(23,23,23,.97);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      height:var(--nav-h);
+    }
+    .navbar .container {
+      display:flex; align-items:center;
+      justify-content:space-between; height:100%;
+    }
+    .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
+    .logo-badge {
+      width:42px; height:42px; border-radius:50%;
+      background:var(--orange);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Tiro Tamil',serif; font-size:20px; color:#fff; flex-shrink:0;
+    }
+    .logo-text-ta { font-family:'Tiro Tamil',serif; font-size:14px; color:var(--orange); line-height:1.2; display:block; }
+    .logo-text-en { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:2px; color:var(--lgray); display:block; }
+
+    .nav-links { display:flex; align-items:center; gap:4px; list-style:none; }
+    .nav-links li a {
+      display:block; padding:8px 12px;
+      font-size:12px; font-weight:600; letter-spacing:1px;
+      text-transform:uppercase; color:var(--lgray); border-radius:3px; transition:.2s;
+    }
+    .nav-links li a:hover, .nav-links li a.active { color:var(--orange); background:rgba(242,86,35,.08); }
+    .nav-links li a.nav-cta { background:var(--orange); color:#fff !important; padding:8px 18px; margin-left:8px; }
+    .nav-links li a.nav-cta:hover { background:var(--orange-dk); }
+
+    .hamburger {
+      display:none; flex-direction:column;
+      gap:5px; background:none; border:none; padding:6px;
+    }
+    .hamburger span {
+      display:block; width:22px; height:2px;
+      background:var(--white); border-radius:2px; transition:.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity:0; }
+    .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE DRAWER */
+    .mobile-menu {
+      display:none; position:fixed;
+      top:var(--nav-h); left:0; right:0; bottom:0;
+      background:var(--black); z-index:190;
+      flex-direction:column; padding:24px 20px; gap:4px;
+      overflow-y:auto; border-top:2px solid var(--orange);
+    }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a {
+      display:block; padding:15px 16px;
+      font-size:16px; font-weight:600; text-transform:uppercase;
+      letter-spacing:1.5px; color:var(--lgray);
+      border-bottom:1px solid rgba(255,255,255,.06); transition:color .2s;
+    }
+    .mobile-menu a:hover { color:var(--orange); }
+    .mobile-menu .mob-cta {
+      margin-top:16px; background:var(--orange); color:#fff !important;
+      text-align:center; border-radius:3px; border:none;
+    }
+
+    /* PAGES */
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* ── HOME HERO ── */
+    .hero {
+      min-height:calc(100vh - var(--nav-h) - 33px);
+      display:flex; align-items:center;
+      position:relative; overflow:hidden; padding:60px 0 80px;
+    }
+    .hero-glow {
+      position:absolute; top:-120px; right:-120px;
+      width:700px; height:700px; border-radius:50%;
+      background:radial-gradient(circle,rgba(242,86,35,.13) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .hero-grid {
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(242,86,35,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(242,86,35,.04) 1px,transparent 1px);
+      background-size:60px 60px; pointer-events:none;
+    }
+    .hero .container {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:60px; align-items:center; position:relative; z-index:1;
+    }
+    .hero-label {
+      display:inline-block;
+      background:rgba(242,86,35,.12); border:1px solid rgba(242,86,35,.3);
+      color:var(--orange); font-size:11px; font-weight:700;
+      letter-spacing:3px; text-transform:uppercase;
+      padding:6px 14px; border-radius:2px; margin-bottom:20px;
+    }
+    .hero-title-ta {
+      font-family:'Tiro Tamil',serif;
+      font-size:clamp(32px,5vw,54px); color:var(--white); line-height:1.25; margin-bottom:8px;
+    }
+    .hero-title-en {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(52px,9vw,100px); letter-spacing:6px;
+      color:var(--orange); line-height:.95; margin-bottom:28px;
+    }
+    .hero-desc { font-size:15px; color:var(--lgray); line-height:1.8; margin-bottom:10px; }
+    .hero-desc-ta { font-family:'Tiro Tamil',serif; font-size:14px; color:rgba(222,222,222,.65); line-height:2; margin-bottom:36px; }
+    .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+
+    .hero-visual { display:flex; flex-direction:column; gap:16px; }
+    .hero-badge {
+      background:var(--card-bg); border:1px solid var(--border);
+      border-top:3px solid var(--orange); padding:28px; border-radius:4px;
+    }
+    .hero-badge-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--orange); margin-bottom:8px; }
+    .hero-badge-ta { font-family:'Tiro Tamil',serif; font-size:13px; color:var(--lgray); line-height:1.9; }
+
+    .stats-row { display:flex; border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+    .stat-box {
+      flex:1; padding:20px 10px; text-align:center;
+      background:var(--card-bg); border-right:1px solid var(--border);
+    }
+    .stat-box:last-child { border-right:none; }
+    .stat-num { font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--orange); line-height:1; }
+    .stat-lbl { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--dgray); margin-top:4px; }
+
+    /* STRIP */
+    .strip { background:var(--orange); padding:14px 0; overflow:hidden; }
+    .strip-inner {
+      display:inline-flex; gap:48px; align-items:center;
+      animation:marquee 22s linear infinite;
+    }
+    .strip-item { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:3px; color:#fff; flex-shrink:0; }
+
+    /* ABOUT */
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+    .about-text p { color:var(--lgray); font-size:15px; line-height:1.85; margin-bottom:18px; }
+    .about-text p strong { color:var(--orange); }
+    .about-text p.ta { font-family:'Tiro Tamil',serif; color:rgba(222,222,222,.65); font-size:14px; line-height:2; }
+
+    .values-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .value-card {
+      background:var(--card-bg); border:1px solid rgba(255,255,255,.06);
+      border-left:3px solid var(--orange); padding:22px 20px; border-radius:3px; transition:.2s;
+    }
+    .value-card:hover { background:rgba(242,86,35,.06); }
+    .value-icon { font-size:26px; margin-bottom:10px; }
+    .value-name { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; color:var(--orange); margin-bottom:2px; }
+    .value-name-ta { font-family:'Tiro Tamil',serif; font-size:12px; color:var(--dgray); margin-bottom:8px; }
+    .value-desc { font-size:13px; color:var(--lgray); line-height:1.6; }
+
+    /* MANIFESTO */
+    .manifesto-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .mcard {
+      background:var(--card-bg); border:1px solid rgba(255,255,255,.06);
+      padding:32px 24px; border-radius:3px; position:relative; overflow:hidden; transition:.25s;
+    }
+    .mcard:hover { border-color:rgba(242,86,35,.4); transform:translateY(-4px); }
+    .mcard::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background:var(--orange); transform:scaleX(0); transform-origin:left; transition:.3s;
+    }
+    .mcard:hover::after { transform:scaleX(1); }
+    .mcard-num { font-family:'Bebas Neue',sans-serif; font-size:56px; color:rgba(242,86,35,.1); line-height:1; margin-bottom:-10px; }
+    .mcard-title { font-family:'Bebas Neue',sans-serif; font-size:21px; letter-spacing:1px; color:var(--white); margin-bottom:3px; }
+    .mcard-title-ta { font-family:'Tiro Tamil',serif; font-size:13px; color:var(--orange); margin-bottom:12px; }
+    .mcard-desc { font-size:13px; color:var(--dgray); line-height:1.7; }
+
+    /* LEADERS */
+    .leaders-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+    .lcard { background:var(--card-bg); border:1px solid rgba(255,255,255,.06); border-radius:3px; overflow:hidden; transition:.25s; }
+    .lcard:hover { border-color:var(--orange); }
+    .lcard-photo {
+      aspect-ratio:1/1;
+      background:linear-gradient(135deg,#2d2d2d,#1a1a1a);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Tiro Tamil',serif; font-size:52px; color:rgba(242,86,35,.3);
+    }
+    .lcard-body { padding:18px; }
+    .lcard-name { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.5px; color:var(--white); }
+    .lcard-name-ta { font-family:'Tiro Tamil',serif; font-size:12px; color:var(--orange); margin-bottom:5px; }
+    .lcard-role { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dgray); }
+
+    /* NEWS */
+    .news-layout { display:grid; grid-template-columns:2fr 1fr; gap:24px; }
+    .nfeat { background:var(--card-bg); border:1px solid rgba(255,255,255,.06); border-radius:3px; overflow:hidden; }
+    .nfeat-img {
+      height:260px; background:linear-gradient(135deg,#2a1500,#3d2200);
+      display:flex; align-items:center; justify-content:center;
+      font-size:64px; position:relative;
+    }
+    .nfeat-badge {
+      position:absolute; top:18px; left:18px; background:var(--orange);
+      color:#fff; font-size:10px; font-weight:700; letter-spacing:2px; padding:4px 10px; border-radius:2px;
+    }
+    .nfeat-body { padding:26px; }
+    .ndate { font-size:11px; color:var(--orange); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+    .ntitle { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; color:var(--white); margin-bottom:4px; }
+    .ntitle-ta { font-family:'Tiro Tamil',serif; font-size:14px; color:var(--lgray); margin-bottom:12px; }
+    .nexcerpt { font-size:13px; color:var(--dgray); line-height:1.7; margin-bottom:20px; }
+    .news-sidebar { display:flex; flex-direction:column; gap:14px; }
+    .nitem { background:var(--card-bg); border:1px solid rgba(255,255,255,.06); padding:18px; border-radius:3px; cursor:pointer; transition:.2s; }
+    .nitem:hover { border-color:rgba(242,86,35,.4); }
+    .nitem-title { font-family:'Bebas Neue',sans-serif; font-size:15px; color:var(--white); margin:4px 0 2px; }
+    .nitem-ta { font-family:'Tiro Tamil',serif; font-size:11px; color:var(--dgray); }
+
+    /* JOIN */
+    .join-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+    .join-info p { font-size:15px; color:var(--lgray); line-height:1.8; margin-bottom:14px; }
+    .join-info p.ta { font-family:'Tiro Tamil',serif; font-size:14px; color:rgba(222,222,222,.6); line-height:2; }
+    .checklist { display:flex; flex-direction:column; gap:12px; margin-top:20px; }
+    .checklist-item { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--lgray); }
+    .checklist-item span { color:var(--orange); font-size:18px; flex-shrink:0; }
+
+    /* FORM */
+    .form { display:flex; flex-direction:column; gap:14px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .fg { display:flex; flex-direction:column; gap:6px; }
+    .fg label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--dgray); }
+    .fg input, .fg select, .fg textarea {
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+      color:var(--white); padding:12px 14px; font-family:'DM Sans',sans-serif;
+      font-size:14px; outline:none; border-radius:3px; transition:.2s; width:100%;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--orange); }
+    .fg select option { background:var(--black); }
+    .fg textarea { resize:vertical; min-height:100px; }
+
+    /* CONTACT */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+    .cinfo { display:flex; flex-direction:column; gap:28px; }
+    .cblock-lbl { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--orange); margin-bottom:6px; }
+    .cblock-val { font-size:15px; color:var(--white); line-height:1.65; }
+    .cblock-val-ta { font-family:'Tiro Tamil',serif; font-size:13px; color:var(--lgray); margin-top:4px; }
+    .socials { display:flex; gap:10px; margin-top:6px; }
+    .soc {
+      width:38px; height:38px; border:1px solid rgba(255,255,255,.15);
+      display:flex; align-items:center; justify-content:center;
+      border-radius:3px; font-size:15px; color:var(--lgray); transition:.2s;
+    }
+    .soc:hover { border-color:var(--orange); color:var(--orange); }
+
+    /* FOOTER */
+    footer { background:#0e0e0e; border-top:2px solid var(--border); padding:36px 0; }
+    footer .container { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px; }
+    .footer-copy { font-size:12px; color:var(--dgray); }
+    .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+    .footer-links a { font-size:12px; color:var(--dgray); transition:color .2s; }
+    .footer-links a:hover { color:var(--orange); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .page.active .a1 { animation:fadeUp .5s .05s both; }
+    .page.active .a2 { animation:fadeUp .5s .15s both; }
+    .page.active .a3 { animation:fadeUp .5s .25s both; }
+    .page.active .a4 { animation:fadeUp .5s .35s both; }
+    .page.active .a5 { animation:fadeUp .5s .45s both; }
+    .page.active .a6 { animation:fadeUp .5s .55s both; }
+
+    /* ── RESPONSIVE: TABLET ── */
+    @media (max-width:900px) {
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+
+      .hero .container { grid-template-columns:1fr; gap:40px; }
+      .hero { min-height:auto; padding:48px 0 60px; }
+
+      .about-grid,
+      .join-grid,
+      .contact-grid { grid-template-columns:1fr; gap:40px; }
+
+      .manifesto-grid { grid-template-columns:repeat(2,1fr); }
+      .leaders-grid   { grid-template-columns:repeat(2,1fr); }
+      .news-layout    { grid-template-columns:1fr; }
+      .values-grid    { grid-template-columns:1fr 1fr; }
+      .section        { padding:60px 0; }
+    }
+
+    /* ── RESPONSIVE: MOBILE ── */
+    @media (max-width:600px) {
+      :root { --nav-h:60px; }
+
+      .hero-title-en { font-size:clamp(44px,16vw,80px); letter-spacing:3px; }
+      .hero-btns { flex-direction:column; }
+      .hero-btns .btn { text-align:center; width:100%; }
+
+      .manifesto-grid { grid-template-columns:1fr; }
+      .leaders-grid   { grid-template-columns:1fr 1fr; }
+      .values-grid    { grid-template-columns:1fr; }
+      .form-row       { grid-template-columns:1fr; }
+
+      footer .container { flex-direction:column; text-align:center; }
+      .footer-links { justify-content:center; }
+    }
+
+    /* ── RESPONSIVE: SMALL ── */
+    @media (max-width:380px) {
+      .leaders-grid { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Tamilar Kalagam</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Current Date and Time</h2>
-            <p>2026-02-19 08:47:55 (UTC)</p>
-        </section>
-        <section>
-            <h2>User Information</h2>
-            <p>Current User's Login: Dharshan-c</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Tamilar Kalagam. All rights reserved.</p>
-    </footer>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>தமிழ் முதலில்</span><span class="dot">·</span>
+    <span>Tamil First</span><span class="dot">·</span>
+    <span>மொழி · கலாச்சாரம் · பெருமை</span><span class="dot">·</span>
+    <span>Language · Culture · Pride</span><span class="dot">·</span>
+    <span>தமிழர் களகம்</span><span class="dot">·</span>
+    <span>Tamilar Kalagam</span><span class="dot">·</span>
+    <span>தமிழ் முதலில்</span><span class="dot">·</span>
+    <span>Tamil First</span><span class="dot">·</span>
+    <span>மொழி · கலாச்சாரம் · பெருமை</span><span class="dot">·</span>
+    <span>Language · Culture · Pride</span><span class="dot">·</span>
+    <span>தமிழர் களகம்</span><span class="dot">·</span>
+    <span>Tamilar Kalagam</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <div class="logo" onclick="showPage('home')">
+      <div class="logo-badge">த</div>
+      <div>
+        <span class="logo-text-ta">தமிழர் களகம்</span>
+        <span class="logo-text-en">Tamilar Kalagam</span>
+      </div>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="return showPage('home')" data-page="home" class="active">Home</a></li>
+      <li><a href="#" onclick="return showPage('about')" data-page="about">About</a></li>
+      <li><a href="#" onclick="return showPage('manifesto')" data-page="manifesto">Manifesto</a></li>
+      <li><a href="#" onclick="return showPage('leaders')" data-page="leaders">Leaders</a></li>
+      <li><a href="#" onclick="return showPage('news')" data-page="news">News</a></li>
+      <li><a href="#" onclick="return showPage('contact')" data-page="contact">Contact</a></li>
+      <li><a href="#" onclick="return showPage('join')" data-page="join" class="nav-cta">Join Us</a></li>
+    </ul>
+    <button class="hamburger" id="ham" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-menu" id="mobMenu">
+  <a href="#" onclick="return showPage('home')">🏠 Home · முகப்பு</a>
+  <a href="#" onclick="return showPage('about')">📖 About · எங்களைப்பற்றி</a>
+  <a href="#" onclick="return showPage('manifesto')">📋 Manifesto · அறிக்கை</a>
+  <a href="#" onclick="return showPage('leaders')">👥 Leaders · தலைவர்கள்</a>
+  <a href="#" onclick="return showPage('news')">📰 News · செய்திகள்</a>
+  <a href="#" onclick="return showPage('contact')">📞 Contact · தொடர்பு</a>
+  <a href="#" onclick="return showPage('join')" class="mob-cta">✊ Join Us · இணையுங்கள்</a>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="page active">
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="container">
+      <div>
+        <div class="hero-label a1">தமிழர் இயக்கம் · Tamil Movement</div>
+        <div class="hero-title-ta a2">தமிழர் களகம்</div>
+        <div class="hero-title-en a3">Tamilar<br>Kalagam</div>
+        <p class="hero-desc a4">A movement rooted in Tamil identity, language, and culture. We stand for the rights, dignity, and self-determination of the Tamil people.</p>
+        <p class="hero-desc-ta a4">தமிழ் மக்களின் உரிமைகளுக்காக, கலாச்சாரத்தின் மேல்நிலைக்காக நாங்கள் போராடுகிறோம்.</p>
+        <div class="hero-btns a5">
+          <button class="btn btn-primary" onclick="showPage('join')">Join the Movement</button>
+          <button class="btn btn-outline" onclick="showPage('manifesto')">Our Manifesto</button>
+        </div>
+      </div>
+      <div class="hero-visual a6">
+        <div class="hero-badge">
+          <div class="hero-badge-title">Our Mission</div>
+          <p class="hero-badge-ta">தமிழ் மக்களின் அரசியல், கலாச்சார மற்றும் பொருளாதார உரிமைகளை நிலைநாட்டுவதே எங்கள் நோக்கம்.</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-num">50K+</div><div class="stat-lbl">Members</div></div>
+          <div class="stat-box"><div class="stat-num">32</div><div class="stat-lbl">Districts</div></div>
+          <div class="stat-box"><div class="stat-num">2010</div><div class="stat-lbl">Founded</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="strip-inner">
+      <span class="strip-item">தமிழ் முதலில்</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">Tamil First</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">மொழி · கலாச்சாரம் · பெருமை</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">Language · Culture · Pride</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">தமிழர் களகம்</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">தமிழ் முதலில்</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">Tamil First</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">மொழி · கலாச்சாரம் · பெருமை</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">Language · Culture · Pride</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+      <span class="strip-item">தமிழர் களகம்</span><span class="dot" style="color:rgba(255,255,255,.45)">·</span>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+        <div class="value-card a1" style="cursor:pointer;" onclick="showPage('about')">
+          <div class="value-icon">📖</div>
+          <div class="value-name">About Us</div>
+          <div class="value-name-ta">எங்களைப் பற்றி</div>
+          <div class="value-desc">Learn about our history, vision, and values.</div>
+        </div>
+        <div class="value-card a2" style="cursor:pointer;" onclick="showPage('manifesto')">
+          <div class="value-icon">📋</div>
+          <div class="value-name">Manifesto</div>
+          <div class="value-name-ta">அறிக்கை</div>
+          <div class="value-desc">Our key policies and political goals.</div>
+        </div>
+        <div class="value-card a3" style="cursor:pointer;" onclick="showPage('news')">
+          <div class="value-icon">📰</div>
+          <div class="value-name">News & Events</div>
+          <div class="value-name-ta">செய்திகள்</div>
+          <div class="value-desc">Stay updated with latest party news.</div>
+        </div>
+        <div class="value-card a4" style="cursor:pointer;border-left-color:var(--orange);background:rgba(242,86,35,.07);" onclick="showPage('join')">
+          <div class="value-icon">✊</div>
+          <div class="value-name">Join Us</div>
+          <div class="value-name-ta">இணையுங்கள்</div>
+          <div class="value-desc">Become a member of our movement today.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div id="about" class="page">
+  <section class="section">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">About Us · எங்களைப் பற்றி</div>
+        <div class="section-title a2">Our Story &<br>Mission</div>
+        <div class="section-title-ta a2">எங்கள் வரலாறும் நோக்கமும்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-text a4">
+          <p><strong>Tamilar Kalagam</strong> was born from the unwavering spirit of the Tamil people — a people with over 2,000 years of literary, cultural, and civilizational history. We are a political and cultural movement committed to protecting, preserving, and promoting Tamil identity in all its dimensions.</p>
+          <p class="ta">தமிழர் களகம் என்பது தமிழ் மக்களின் அசையாத உறுதியிலிருந்து பிறந்தது. 2,000 ஆண்டுகளுக்கும் மேலான இலக்கிய, கலாச்சார மற்றும் நாகரிக வரலாற்றை உடைய மக்களின் இயக்கம் இது.</p>
+          <p>We stand firmly for the <strong>official status of Tamil language</strong>, the rights of Tamil workers and farmers, the protection of Tamil cultural heritage, and political representation at state and national levels.</p>
+          <p>Our movement is democratic, non-violent, and rooted in the teachings of Tamil philosophers who fought for justice and equality throughout history.</p>
+          <div style="margin-top:28px;">
+            <button class="btn btn-primary btn-sm" onclick="showPage('join')">Join Our Movement</button>
+          </div>
+        </div>
+        <div class="values-grid a5">
+          <div class="value-card"><div class="value-icon">🔤</div><div class="value-name">Language</div><div class="value-name-ta">மொழி</div><div class="value-desc">Protecting Tamil as a living, official, and thriving classical language.</div></div>
+          <div class="value-card"><div class="value-icon">🏛️</div><div class="value-name">Culture</div><div class="value-name-ta">கலாச்சாரம்</div><div class="value-desc">Preserving and celebrating Tamil art, literature, music, and tradition.</div></div>
+          <div class="value-card"><div class="value-icon">⚖️</div><div class="value-name">Justice</div><div class="value-name-ta">நீதி</div><div class="value-desc">Fighting for social, economic, and political justice for all Tamils.</div></div>
+          <div class="value-card"><div class="value-icon">🤝</div><div class="value-name">Unity</div><div class="value-name-ta">ஒற்றுமை</div><div class="value-desc">Building solidarity among Tamil communities across the world.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ MANIFESTO ══ -->
+<div id="manifesto" class="page">
+  <section class="section section--dark">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">Our Goals · எங்கள் நோக்கங்கள்</div>
+        <div class="section-title a2">Manifesto &<br>Key Policies</div>
+        <div class="section-title-ta a2">அறிக்கை மற்றும் கொள்கைகள்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="manifesto-grid a4">
+        <div class="mcard"><div class="mcard-num">01</div><div class="mcard-title">Language Rights</div><div class="mcard-title-ta">மொழி உரிமைகள்</div><div class="mcard-desc">Making Tamil the primary official language of all government communications, courts, and education in Tamil Nadu.</div></div>
+        <div class="mcard"><div class="mcard-num">02</div><div class="mcard-title">Economic Justice</div><div class="mcard-title-ta">பொருளாதார நீதி</div><div class="mcard-desc">Ensuring fair share of central funds. Supporting Tamil farmers, fishermen, and micro-entrepreneurs with policy protections.</div></div>
+        <div class="mcard"><div class="mcard-num">03</div><div class="mcard-title">Cultural Preservation</div><div class="mcard-title-ta">கலாச்சார பாதுகாப்பு</div><div class="mcard-desc">Protecting Tamil temples, heritage sites, classical arts, Jallikattu, and folk traditions. Promoting Tamil culture globally.</div></div>
+        <div class="mcard"><div class="mcard-num">04</div><div class="mcard-title">State Autonomy</div><div class="mcard-title-ta">மாநில தன்னாட்சி</div><div class="mcard-desc">Pushing for greater federalism. Tamil Nadu must control its own governance, natural resources, and development priorities.</div></div>
+        <div class="mcard"><div class="mcard-num">05</div><div class="mcard-title">Education Reform</div><div class="mcard-title-ta">கல்வி சீர்திருத்தம்</div><div class="mcard-desc">Quality Tamil-medium education at all levels. Opposing centralized exams that discriminate against rural Tamil students.</div></div>
+        <div class="mcard"><div class="mcard-num">06</div><div class="mcard-title">Water Rights</div><div class="mcard-title-ta">நீர் உரிமைகள்</div><div class="mcard-desc">Securing Tamil Nadu's share of Cauvery waters. Building water infrastructure to protect Tamil agriculture for generations.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ LEADERS ══ -->
+<div id="leaders" class="page">
+  <section class="section">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">Leadership · தலைமை</div>
+        <div class="section-title a2">Our Leaders</div>
+        <div class="section-title-ta a2">எங்கள் தலைவர்கள்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="leaders-grid a4">
+        <div class="lcard"><div class="lcard-photo">த</div><div class="lcard-body"><div class="lcard-name">Party President</div><div class="lcard-name-ta">கட்சி தலைவர்</div><div class="lcard-role">National Chairperson</div></div></div>
+        <div class="lcard"><div class="lcard-photo">க</div><div class="lcard-body"><div class="lcard-name">General Secretary</div><div class="lcard-name-ta">பொதுச் செயலாளர்</div><div class="lcard-role">Executive Head</div></div></div>
+        <div class="lcard"><div class="lcard-photo">ம</div><div class="lcard-body"><div class="lcard-name">Treasurer</div><div class="lcard-name-ta">பொருளாள்</div><div class="lcard-role">Finance & Accounts</div></div></div>
+        <div class="lcard"><div class="lcard-photo">இ</div><div class="lcard-body"><div class="lcard-name">Youth Wing Head</div><div class="lcard-name-ta">இளைஞர் அணி தலைவர்</div><div class="lcard-role">Youth Affairs</div></div></div>
+      </div>
+      <div style="margin-top:28px;padding:24px;background:rgba(242,86,35,.05);border:1px solid var(--border);border-radius:3px;text-align:center;" class="a5">
+        <p style="font-family:'Tiro Tamil',serif;font-size:15px;color:var(--lgray);line-height:2;">தலைவர் விவரங்களை புதுப்பிக்க தொடர்பு கொள்ளுங்கள்</p>
+        <p style="font-size:13px;color:var(--dgray);margin-top:6px;">Contact us to update leader profiles and add official photographs.</p>
+        <div style="margin-top:16px;"><button class="btn btn-outline btn-sm" onclick="showPage('contact')">Contact Us</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ NEWS ══ -->
+<div id="news" class="page">
+  <section class="section section--dark">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">News & Events · செய்திகள்</div>
+        <div class="section-title a2">Latest Updates</div>
+        <div class="section-title-ta a2">சமீபத்திய செய்திகள்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="news-layout a4">
+        <div class="nfeat">
+          <div class="nfeat-img"><div class="nfeat-badge">Featured</div>📢</div>
+          <div class="nfeat-body">
+            <div class="ndate">February 2025</div>
+            <div class="ntitle">Grand State Convention Announced</div>
+            <div class="ntitle-ta">மாபெரும் மாநாடு அறிவிப்பு</div>
+            <div class="nexcerpt">Tamilar Kalagam announces its grand state-level convention in Chennai this March. Members from all 32 districts will deliberate on the party's political roadmap and elect new office bearers.</div>
+            <button class="btn btn-primary btn-sm">Read More</button>
+          </div>
+        </div>
+        <div class="news-sidebar">
+          <div class="nitem"><div class="ndate">January 2025</div><div class="nitem-title">Cauvery Water Rights Protest</div><div class="nitem-ta">காவிரி நீர் உரிமை போராட்டம்</div></div>
+          <div class="nitem"><div class="ndate">December 2024</div><div class="nitem-title">Tamil Classical Language Summit</div><div class="nitem-ta">தமிழ் செம்மொழி மாநாடு</div></div>
+          <div class="nitem"><div class="ndate">November 2024</div><div class="nitem-title">Youth Wing Statewide Rally</div><div class="nitem-ta">இளைஞர் அணி மாநில பேரணி</div></div>
+          <div class="nitem"><div class="ndate">October 2024</div><div class="nitem-title">Farmers' Rights Convention</div><div class="nitem-ta">விவசாயிகள் உரிமை மாநாடு</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ JOIN ══ -->
+<div id="join" class="page">
+  <section class="section">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">Be Part of the Movement</div>
+        <div class="section-title a2">Join Tamilar<br>Kalagam</div>
+        <div class="section-title-ta a2">தமிழர் களகத்தில் இணையுங்கள்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="join-grid">
+        <div class="join-info a4">
+          <p>Together, we can build a stronger, more just Tamil Nadu. Join thousands of dedicated members who are working every day for the Tamil cause.</p>
+          <p class="ta">ஒன்றாக, நாம் ஒரு வலிமையான, நீதியான தமிழகத்தை உருவாக்க முடியும்.</p>
+          <div class="checklist">
+            <div class="checklist-item"><span>✅</span> Free membership, open to all</div>
+            <div class="checklist-item"><span>✅</span> Active presence in all 32 districts</div>
+            <div class="checklist-item"><span>✅</span> Youth, women, and student wings</div>
+            <div class="checklist-item"><span>✅</span> Regular events, rallies, and training</div>
+          </div>
+        </div>
+        <form class="form a5" onsubmit="handleJoin(event)">
+          <div class="form-row">
+            <div class="fg"><label>Full Name · பெயர்</label><input type="text" placeholder="உங்கள் பெயர்" required></div>
+            <div class="fg"><label>Age · வயது</label><input type="number" placeholder="25" min="18" max="99"></div>
+          </div>
+          <div class="fg"><label>Mobile · தொலைபேசி</label><input type="tel" placeholder="+91 98765 43210" required></div>
+          <div class="fg"><label>Email · மின்னஞ்சல்</label><input type="email" placeholder="yourname@email.com"></div>
+          <div class="fg">
+            <label>District · மாவட்டம்</label>
+            <select>
+              <option value="">Select · தேர்வு செய்யவும்</option>
+              <option>Chennai · சென்னை</option>
+              <option>Coimbatore · கோயம்புத்தூர்</option>
+              <option>Madurai · மதுரை</option>
+              <option>Tiruchirappalli · திருச்சிராப்பள்ளி</option>
+              <option>Salem · சேலம்</option>
+              <option>Tirunelveli · திருநெல்வேலி</option>
+              <option>Erode · ஈரோடு</option>
+              <option>Vellore · வேலூர்</option>
+              <option>Thanjavur · தஞ்சாவூர்</option>
+              <option>Kanyakumari · கன்னியாகுமரி</option>
+              <option>Other · மற்றவை</option>
+            </select>
+          </div>
+          <div class="fg"><label>Why Join? · ஏன் இணைய விரும்புகிறீர்கள்?</label><textarea placeholder="Share your thoughts..."></textarea></div>
+          <button type="submit" class="btn btn-primary">Submit Application · விண்ணப்பிக்கவும்</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div id="contact" class="page">
+  <section class="section section--dark">
+    <div class="container">
+      <div style="margin-bottom:52px;">
+        <div class="tag a1">Get in Touch · தொடர்பு கொள்ளுங்கள்</div>
+        <div class="section-title a2">Contact Us</div>
+        <div class="section-title-ta a2">எங்களை தொடர்புகொள்ளுங்கள்</div>
+        <div class="divider a3"></div>
+      </div>
+      <div class="contact-grid">
+        <div class="cinfo a4">
+          <div>
+            <div class="cblock-lbl">Headquarters · தலைமையகம்</div>
+            <div class="cblock-val">Tamilar Kalagam, Central Office<br>[Your Address Here], Chennai<br>Tamil Nadu — 600 001</div>
+            <div class="cblock-val-ta">தமிழர் களகம், மைய அலுவலகம்<br>சென்னை, தமிழ்நாடு — 600 001</div>
+          </div>
+          <div>
+            <div class="cblock-lbl">Phone · தொலைபேசி</div>
+            <div class="cblock-val">+91 XXXXX XXXXX</div>
+          </div>
+          <div>
+            <div class="cblock-lbl">Email · மின்னஞ்சல்</div>
+            <div class="cblock-val">contact@tamilarkalagam.org</div>
+          </div>
+          <div>
+            <div class="cblock-lbl">Follow Us · எங்களை பின்தொடரவும்</div>
+            <div class="socials">
+              <a href="#" class="soc" title="Twitter">𝕏</a>
+              <a href="#" class="soc" title="Facebook">f</a>
+              <a href="#" class="soc" title="YouTube">▶</a>
+              <a href="#" class="soc" title="Instagram">◉</a>
+            </div>
+          </div>
+        </div>
+        <form class="form a5" onsubmit="handleContact(event)">
+          <div class="fg"><label>Your Name · பெயர்</label><input type="text" placeholder="உங்கள் பெயர்" required></div>
+          <div class="fg"><label>Email · மின்னஞ்சல்</label><input type="email" placeholder="yourname@email.com" required></div>
+          <div class="fg"><label>Subject · பொருள்</label><input type="text" placeholder="Message subject"></div>
+          <div class="fg"><label>Message · செய்தி</label><textarea style="min-height:140px;" placeholder="Your message here..." required></textarea></div>
+          <button type="submit" class="btn btn-primary">Send Message · அனுப்பவும்</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="logo">
+      <div class="logo-badge">த</div>
+      <div>
+        <span class="logo-text-ta">தமிழர் களகம்</span>
+        <span class="logo-text-en">Tamilar Kalagam</span>
+      </div>
+    </div>
+    <div class="footer-copy">© 2025 Tamilar Kalagam. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#" onclick="return showPage('about')">About</a>
+      <a href="#" onclick="return showPage('manifesto')">Manifesto</a>
+      <a href="#" onclick="return showPage('leaders')">Leaders</a>
+      <a href="#" onclick="return showPage('join')">Join</a>
+      <a href="#" onclick="return showPage('contact')">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === id);
+    });
+    closeMob();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return false;
+  }
+
+  function toggleMenu() {
+    const m = document.getElementById('mobMenu');
+    const h = document.getElementById('ham');
+    const open = m.classList.toggle('open');
+    h.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  function closeMob() {
+    document.getElementById('mobMenu').classList.remove('open');
+    document.getElementById('ham').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleJoin(e) {
+    e.preventDefault();
+    alert('✅ உங்கள் விண்ணப்பம் பெறப்பட்டது!\nYour application has been received. We will contact you soon.');
+    e.target.reset();
+  }
+
+  function handleContact(e) {
+    e.preventDefault();
+    alert('✅ செய்தி அனுப்பப்பட்டது!\nMessage sent. We will get back to you soon.');
+    e.target.reset();
+  }
+
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMob(); });
+</script>
 </body>
 </html>
